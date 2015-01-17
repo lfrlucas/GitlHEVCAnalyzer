@@ -27,6 +27,7 @@ public:
 
     void on_version100_clicked();
     void on_version120_clicked();
+    void on_version129_clicked();
 
 protected:
     virtual void showEvent(QShowEvent * event);

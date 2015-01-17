@@ -40,6 +40,11 @@ void BitstreamVersionSelector::on_version120_clicked()
     m_iBitstreamVersion = 120;
 }
 
+void BitstreamVersionSelector::on_version129_clicked()
+{
+    m_iBitstreamVersion = 129;
+}
+
 void BitstreamVersionSelector::showEvent(QShowEvent * event)
 {
     /// restore last selection
@@ -57,6 +62,9 @@ void BitstreamVersionSelector::showEvent(QShowEvent * event)
         break;
     case 120:
         ui->version120->setChecked(true);
+        break;
+    case 129:
+        ui->version129->setChecked(true);
         break;
     default:
         ui->version100->setChecked(true);
@@ -96,5 +104,9 @@ void BitstreamVersionSelector::xSetDecoderVersion()
     else if(ui->version120->isChecked() )
     {
         m_iBitstreamVersion = 120;
+    }
+    else if(ui->version129->isChecked() )
+    {
+        m_iBitstreamVersion = 129;
     }
 }
