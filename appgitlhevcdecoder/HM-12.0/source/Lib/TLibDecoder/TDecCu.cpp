@@ -50,6 +50,7 @@
 TDecCu::TDecCu()
 {
   m_ppcYuvResi = NULL;
+  m_ppcYuvPred = NULL;
   m_ppcYuvReco = NULL;
   m_ppcCU      = NULL;
 }
@@ -75,6 +76,7 @@ Void TDecCu::create( UInt uiMaxDepth, UInt uiMaxWidth, UInt uiMaxHeight )
   m_uiMaxDepth = uiMaxDepth+1;
   
   m_ppcYuvResi = new TComYuv*[m_uiMaxDepth-1];
+  m_ppcYuvPred = new TComYuv*[m_uiMaxDepth-1];
   m_ppcYuvReco = new TComYuv*[m_uiMaxDepth-1];
   m_ppcCU      = new TComDataCU*[m_uiMaxDepth-1];
   
@@ -86,6 +88,7 @@ Void TDecCu::create( UInt uiMaxDepth, UInt uiMaxWidth, UInt uiMaxHeight )
     UInt uiHeight = uiMaxHeight >> ui;
     
     m_ppcYuvResi[ui] = new TComYuv;    m_ppcYuvResi[ui]->create( uiWidth, uiHeight );
+    m_ppcYuvPred[ui] = new TComYuv;    m_ppcYuvPred[ui]->create( uiWidth, uiHeight );
     m_ppcYuvReco[ui] = new TComYuv;    m_ppcYuvReco[ui]->create( uiWidth, uiHeight );
     m_ppcCU     [ui] = new TComDataCU; m_ppcCU     [ui]->create( uiNumPartitions, uiWidth, uiHeight, true, uiMaxWidth >> (m_uiMaxDepth - 1) );
   }
@@ -106,11 +109,13 @@ Void TDecCu::destroy()
   for ( UInt ui = 0; ui < m_uiMaxDepth-1; ui++ )
   {
     m_ppcYuvResi[ui]->destroy(); delete m_ppcYuvResi[ui]; m_ppcYuvResi[ui] = NULL;
+    m_ppcYuvPred[ui]->destroy(); delete m_ppcYuvPred[ui]; m_ppcYuvPred[ui] = NULL;
     m_ppcYuvReco[ui]->destroy(); delete m_ppcYuvReco[ui]; m_ppcYuvReco[ui] = NULL;
     m_ppcCU     [ui]->destroy(); delete m_ppcCU     [ui]; m_ppcCU     [ui] = NULL;
   }
   
   delete [] m_ppcYuvResi; m_ppcYuvResi = NULL;
+  delete [] m_ppcYuvPred; m_ppcYuvPred = NULL;
   delete [] m_ppcYuvReco; m_ppcYuvReco = NULL;
   delete [] m_ppcCU     ; m_ppcCU      = NULL;
 }
@@ -428,6 +433,7 @@ Void TDecCu::xDecompressCU( TComDataCU* pcCU, UInt uiAbsPartIdx,  UInt uiDepth )
   
   // Residual reconstruction
   m_ppcYuvResi[uiDepth]->clear();
+  m_ppcYuvPred[uiDepth]->clear();
   
   m_ppcCU[uiDepth]->copySubCU( pcCU, uiAbsPartIdx, uiDepth );
   
@@ -649,12 +655,12 @@ TDecCu::xReconIntraQT( TComDataCU* pcCU, UInt uiDepth )
 
   for( UInt uiPU = 0; uiPU < uiNumPart; uiPU++ )
   {
-    xIntraLumaRecQT( pcCU, uiInitTrDepth, uiPU * uiNumQParts, m_ppcYuvReco[uiDepth], m_ppcYuvReco[uiDepth], m_ppcYuvResi[uiDepth] );
+    xIntraLumaRecQT( pcCU, uiInitTrDepth, uiPU * uiNumQParts, m_ppcYuvReco[uiDepth], m_ppcYuvPred[uiDepth], m_ppcYuvResi[uiDepth] );
   }  
 
   for( UInt uiPU = 0; uiPU < uiNumPart; uiPU++ )
   {
-    xIntraChromaRecQT( pcCU, uiInitTrDepth, uiPU * uiNumQParts, m_ppcYuvReco[uiDepth], m_ppcYuvReco[uiDepth], m_ppcYuvResi[uiDepth] );
+    xIntraChromaRecQT( pcCU, uiInitTrDepth, uiPU * uiNumQParts, m_ppcYuvReco[uiDepth], m_ppcYuvPred[uiDepth], m_ppcYuvResi[uiDepth] );
   }
 
 }
@@ -736,6 +742,7 @@ Void TDecCu::xCopyToPic( TComDataCU* pcCU, TComPic* pcPic, UInt uiZorderIdx, UIn
 
 #if ENABLE_ANAYSIS_OUTPUT
   m_ppcYuvResi[uiDepth]->copyToPicYuv  ( pcPic->getPicYuvResi(), uiCUAddr, uiZorderIdx );
+  m_ppcYuvPred[uiDepth]->copyToPicYuv  ( pcPic->getPicYuvPred(), uiCUAddr, uiZorderIdx );
 #endif
 
   return;

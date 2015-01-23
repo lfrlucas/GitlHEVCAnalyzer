@@ -171,6 +171,7 @@ Void TAppDecTop::decode()
         openedReconFile = true;
 #if ENABLE_ANAYSIS_OUTPUT
         m_cTVideoIOYuvResiFile.open( "resi_yuv.yuv", true, 16, 16, 16, 16 ); // residual yuv file (16bit ***8bit-8bit = 16bit**)
+        m_cTVideoIOYuvPredFile.open( "pred_yuv.yuv", true, 8, 8, 8, 8 ); // prediction yuv file (16bit ***8bit-8bit = 16bit**)
 #endif
       }
       if ( bNewPicture && 
@@ -215,6 +216,7 @@ Void TAppDecTop::xDestroyDecLib()
     m_cTVideoIOYuvReconFile. close();
 #if ENABLE_ANAYSIS_OUTPUT
     m_cTVideoIOYuvResiFile.close();
+    m_cTVideoIOYuvPredFile.close();
 #endif
   }
   
@@ -285,6 +287,11 @@ Void TAppDecTop::xWriteOutput( TComList<TComPic*>* pcListPic, UInt tId )
                                         conf.getWindowRightOffset() + defDisp.getWindowRightOffset(),
                                         conf.getWindowTopOffset() + defDisp.getWindowTopOffset(),
                                         conf.getWindowBottomOffset() + defDisp.getWindowBottomOffset(), isTff );
+        m_cTVideoIOYuvPredFile.write(   pcPicTop->getPicYuvPred(),  pcPicBottom->getPicYuvPred(),
+                                        conf.getWindowLeftOffset() + defDisp.getWindowLeftOffset(),
+                                        conf.getWindowRightOffset() + defDisp.getWindowRightOffset(),
+                                        conf.getWindowTopOffset() + defDisp.getWindowTopOffset(),
+                                        conf.getWindowBottomOffset() + defDisp.getWindowBottomOffset(), isTff );
 #endif
         }
         
@@ -349,6 +356,11 @@ Void TAppDecTop::xWriteOutput( TComList<TComPic*>* pcListPic, UInt tId )
                                         conf.getWindowBottomOffset() + defDisp.getWindowBottomOffset() );
 #if ENABLE_ANAYSIS_OUTPUT
         m_cTVideoIOYuvResiFile.write( pcPic->getPicYuvResi(),
+                                        conf.getWindowLeftOffset() + defDisp.getWindowLeftOffset(),
+                                        conf.getWindowRightOffset() + defDisp.getWindowRightOffset(),
+                                        conf.getWindowTopOffset() + defDisp.getWindowTopOffset(),
+                                        conf.getWindowBottomOffset() + defDisp.getWindowBottomOffset() );
+        m_cTVideoIOYuvPredFile.write( pcPic->getPicYuvPred(),
                                         conf.getWindowLeftOffset() + defDisp.getWindowLeftOffset(),
                                         conf.getWindowRightOffset() + defDisp.getWindowRightOffset(),
                                         conf.getWindowTopOffset() + defDisp.getWindowTopOffset(),
@@ -423,6 +435,11 @@ Void TAppDecTop::xFlushOutput( TComList<TComPic*>* pcListPic )
                                         conf.getWindowBottomOffset() + defDisp.getWindowBottomOffset(), isTff );
 #if ENABLE_ANAYSIS_OUTPUT
         m_cTVideoIOYuvResiFile.write(   pcPicTop->getPicYuvResi(),  pcPicBottom->getPicYuvResi(),
+                                        conf.getWindowLeftOffset() + defDisp.getWindowLeftOffset(),
+                                        conf.getWindowRightOffset() + defDisp.getWindowRightOffset(),
+                                        conf.getWindowTopOffset() + defDisp.getWindowTopOffset(),
+                                        conf.getWindowBottomOffset() + defDisp.getWindowBottomOffset(), isTff );
+        m_cTVideoIOYuvPredFile.write(   pcPicTop->getPicYuvPred(),  pcPicBottom->getPicYuvPred(),
                                         conf.getWindowLeftOffset() + defDisp.getWindowLeftOffset(),
                                         conf.getWindowRightOffset() + defDisp.getWindowRightOffset(),
                                         conf.getWindowTopOffset() + defDisp.getWindowTopOffset(),
@@ -505,6 +522,11 @@ Void TAppDecTop::xFlushOutput( TComList<TComPic*>* pcListPic )
                                         conf.getWindowBottomOffset() + defDisp.getWindowBottomOffset() );
 #if ENABLE_ANAYSIS_OUTPUT
         m_cTVideoIOYuvResiFile.write( pcPic->getPicYuvResi(),
+                                        conf.getWindowLeftOffset() + defDisp.getWindowLeftOffset(),
+                                        conf.getWindowRightOffset() + defDisp.getWindowRightOffset(),
+                                        conf.getWindowTopOffset() + defDisp.getWindowTopOffset(),
+                                        conf.getWindowBottomOffset() + defDisp.getWindowBottomOffset() );
+        m_cTVideoIOYuvPredFile.write( pcPic->getPicYuvPred(),
                                         conf.getWindowLeftOffset() + defDisp.getWindowLeftOffset(),
                                         conf.getWindowRightOffset() + defDisp.getWindowRightOffset(),
                                         conf.getWindowTopOffset() + defDisp.getWindowTopOffset(),
