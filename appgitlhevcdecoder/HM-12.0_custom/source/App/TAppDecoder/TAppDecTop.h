@@ -64,6 +64,7 @@ private:
   TVideoIOYuv                     m_cTVideoIOYuvReconFile;        ///< reconstruction YUV class
 #if ENABLE_ANAYSIS_OUTPUT
   TVideoIOYuv                     m_cTVideoIOYuvResiFile;        ///< reconstruction YUV class
+  TVideoIOYuv                     m_cTVideoIOYuvPredFile;        ///< reconstruction YUV class
 #endif
   
   // for output control

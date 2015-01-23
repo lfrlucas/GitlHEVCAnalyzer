@@ -13,6 +13,7 @@ static YUV_SELECTION pasSelections[] =
 {
     { 0,    "Reconstructed",    YUV_RECONSTRUCTED },
     { 1,    "Residual",         YUV_RESIDUAL      },
+    { 2,    "Predicted",        YUV_PREDICTED     },
     { -1,   NULL,               YUV_NONE          },       /// end mark
 };
 
